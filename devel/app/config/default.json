@@ -1,0 +1,5 @@
+{
+    "wordGame": {
+        "db": "mongodb://localhost/test"
+    }
+}
