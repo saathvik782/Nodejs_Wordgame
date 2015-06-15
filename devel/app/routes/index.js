@@ -32,12 +32,12 @@ router.get('/', function(req, res) {
 router.get('/game/:token/:user', function(req, res) {
     var token = req.params.token;
     var user = req.params.user;
-    //res.render('partials/game', {
-    //    title: 'Word Game ' + token,
-    //    user: user,
-    //    isPlayPage: true,
-    //    token: token
-    //});
+    res.render('partials/game', {
+        title: 'Word Game ' + token,
+        user: user,
+        token: token,
+        js: 'game.js'
+    });
 });
 
 module.exports = router;

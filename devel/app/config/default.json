@@ -1,5 +1,6 @@
 {
     "wordGame": {
-        "db": "mongodb://localhost/test"
+        "db": "mongodb://localhost/test",
+        "gameWaitTime":5
     }
 }

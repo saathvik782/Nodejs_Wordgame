@@ -12,8 +12,11 @@ var router = express.Router();
 
 router.post('/', function(req, res) {
     var user = req.body.user; 
-    var token = util.randomString(20);
-    console.log("redirecting from play > index for "+user);
+    var token;
+    if(!req.body.token)
+        token=util.randomString(20);
+    else
+        token=req.body.token;
     res.redirect('/game/' + token + '/' + user);
 });
 
