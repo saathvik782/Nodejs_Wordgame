@@ -1,27 +1,18 @@
 <br/>
 <div class="row">
-    <div class="col-md-2 col-md-offset-10" id="colouredUserName">
-        <span class="glyphicon glyphicon-user"></span> {{ user }}
+    <div class="col-md-2" id="sideScreenL">
     </div>
-</div>
-<br/>
-<div class="row">
-    <div class="col-md-2 col-md-offset-1" id="sideScreenL">
-    </div>
-    <div class="col-md-4 col-md-offset-1"  >
+    <div class="col-md-8"  >
             <div class="row jumbotron" id="mainScreen" data-token="{{ token }}" data-user="{{ user }}">
                 Waiting for other players..
             </div>
-            <br/>
-            <div class="row" id="gameScoreDisplay">
-                Words found : 0
-            </div>
-            <br/>
-            <div class="row" id="gamePassButton">
-                <center><button class="btn btn-success disabled">Pass</button></center>
-            </div>
     </div>
-    <div class="col-md-2 col-md-offset-1" id="sideScreenR">
+    <div class="col-md-2" >
+        <div class="row" id="colouredUserName"><center><span class="glyphicon glyphicon-user"></span> {{ user }}</center></div>
+        <div class="row" id="sideScreenR"></div>
+        <div class="row" >
+            <center><button class="btn btn-success disabled" id="gamePassButton">Pass</button></center>
+        </div>
     </div>
 </div>
 

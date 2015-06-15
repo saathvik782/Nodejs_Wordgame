@@ -119,6 +119,9 @@ module.exports = function (server) {
                 
                 game.status='ready';
                 io.sockets.to(data.token).emit('start', data);
+                io.sockets.to(data.token).emit('new-turn',{
+                    'name' : game.players[game.turn].name
+                });
             }
             else{
                 console.log("incrementing time..");
@@ -143,9 +146,9 @@ module.exports = function (server) {
                 'display_data': data.name+' found '+data.word
             });
             var room = data.token;
-            var game=games[room];
+            var game=games[data.token];
             game.turn = (game.turn+1) % game.players.length;
-            socket.broadcast.to(token).emit('new-turn',{
+            io.sockets.to(data.token).emit('new-turn',{
                 'name' : game.players[game.turn].name
             });
         });
@@ -162,7 +165,7 @@ module.exports = function (server) {
                 });
                 var game=games[room];
                 game.turn = (game.turn+1) % game.players.length;
-                socket.broadcast.to(token).emit('new-turn',{
+                io.sockets.to(room).emit('new-turn',{
                     'name' : game.players[game.turn].name
                 });            
             }
