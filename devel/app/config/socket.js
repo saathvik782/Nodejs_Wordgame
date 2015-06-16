@@ -1,4 +1,5 @@
 var config = require('config');
+var puzzle = require('./puzzle');
 module.exports = function (server) {
 
     var io = require('socket.io').listen(server);
@@ -35,6 +36,8 @@ module.exports = function (server) {
                     players: players,
                     colours : [colour],
                     turn : 0,
+                    wordsRemaining : [],
+                    wordsDone : [],
                     root : username
                 };
 
@@ -92,35 +95,16 @@ module.exports = function (server) {
                 
                 var game=games[data.token]
                 
-                data.player_info={};
-                for(var each in game.players){
-                    //Player scores,names and colour
-                    data.player_info[game.players[each].name]={
-                        'score':game.players[each].score,
-                        'colour':game.players[each].colour
-                    };
-                }
-                data.puzzle=[];
-                data.puzzle.push("abcdefghijklmno")
-                data.puzzle.push("abcdefghijklmno")
-                data.puzzle.push("abcdefghijklmno")
-                data.puzzle.push("abcdefghijklmno")
-                data.puzzle.push("abcdefghijklmno")
-                data.puzzle.push("abcdefghijklmno")
-                data.puzzle.push("abcdefghijklmno")
-                data.puzzle.push("abcdefghijklmno")
-                data.puzzle.push("abcdefghijklmno")
-                data.puzzle.push("abcdefghijklmno")
-                data.puzzle.push("abcdefghijklmno")
-                data.puzzle.push("abcdefghijklmno")
-                data.puzzle.push("abcdefghijklmno")
-                data.puzzle.push("abcdefghijklmno")
-                data.puzzle.push("abcdefghijklmno")
-                
+                data.player_info=getPlayerInfo(game);
+                data.puzzle=puzzle.generatePuzzle();
+                game.wordsRemaining=puzzle.getWords();
+
                 game.status='ready';
                 io.sockets.to(data.token).emit('start', data);
                 io.sockets.to(data.token).emit('new-turn',{
-                    'name' : game.players[game.turn].name
+                    'name' : game.players[game.turn].name,
+                    'player_info': data.player_info,
+                    'display_data':' Your turn '
                 });
             }
             else{
@@ -136,21 +120,74 @@ module.exports = function (server) {
          */
         socket.on('new-click', function(data) {
             var game=games[data.token];
+            player_info={};
+            for(var each in game.players){
+                //Player scores,names and colour
+                player_info[game.players[each].name]={
+                    'score':game.players[each].score,
+                    'colour':game.players[each].colour
+                };
+            }
+            data.player_info=player_info;
             io.sockets.to(data.token).emit('new-click', data);
         });
 
         socket.on('new-enter', function(data){
             //TODO: implement checker and send appropriate response
-            io.sockets.to(data.token).emit('new-enter',{
-                'colour': data.colour,
-                'display_data': data.name+' found '+data.word
-            });
             var room = data.token;
             var game=games[data.token];
+            var display_data='';
+            
             game.turn = (game.turn+1) % game.players.length;
-            io.sockets.to(data.token).emit('new-turn',{
-                'name' : game.players[game.turn].name
+            if (game.wordsDone.indexOf(data.word) > -1){
+                display_data= data.word+' already found ';
+            }
+            else if(game.wordsRemaining.indexOf(data.word) > -1){
+                var index=game.wordsRemaining.indexOf(data.word);
+                display_data= data.name+' found '+data.word;
+                game.wordsRemaining.splice(index,1);
+                game.wordsDone.push(data.word);
+                for(var each in game.players){
+                    if(game.players[each].name == data.name)
+                        game.players[each].score++;
+                }
+            }
+            else 
+                display_data= data.word+' wrong word';
+            
+            io.sockets.to(data.token).emit('new-enter',{
+                'colour': data.colour,
+                'display_data': display_data 
             });
+ 
+            io.sockets.to(data.token).emit('new-turn',{
+                'name' : game.players[game.turn].name,
+                'player_info': getPlayerInfo(game),
+                'display_data':' Your turn '
+            })          
+
+            if(game.wordsRemaining.length == 0){
+                //Find the user with the highest score and send abort
+                var winner_name="";
+                var winner_colour="";
+                var winner_score=0;
+                var display_data="";
+                for(var each in game.players)
+                    if(game.players[each].score > winner_score){
+                        winner_name=game.players[each].name;
+                        winner_colour=game.players[each].colour;
+                        winner_score=game.players[each].score;
+                    }
+                display_data=winner_name+' won !!!';
+                for(var each in game.players)
+                    if(game.players[each].score == winner_score && game.players[each].name != winner_name)
+                        display_data=" It's a draw !!!";
+                
+                io.sockets.to(data.token).emit('abort',{
+                    'display_data': display_data
+                });
+                return;
+            }
         });
 
         /*
@@ -166,7 +203,9 @@ module.exports = function (server) {
                 var game=games[room];
                 game.turn = (game.turn+1) % game.players.length;
                 io.sockets.to(room).emit('new-turn',{
-                    'name' : game.players[game.turn].name
+                    'name' : game.players[game.turn].name,
+                    'player_info': getPlayerInfo(game),
+                    'display_data':' Your turn '
                 });            
             }
         });
@@ -175,40 +214,39 @@ module.exports = function (server) {
          * A player disconnects => notify opponent, leave game room and delete the game
          */
         socket.on('disconnect', function(data){
-            console.log("someone disconnected");
             for (var token in games) {
                 var game = games[token];
                 for (var i=0;i<game.players.length;i++) {
                     var player = game.players[i];
                     if (player.socket === socket) {
-                        console.log("found him "+player.colour);
                         //If there are anymore players let them know that people have disconnected
                         socket.broadcast.to(token).emit('player-disconnected', {
                             'colour': player.colour,
                             'display_data': player.name+' disconnected'
                         });
                         game.players.splice(i,1);
-                        console.log("remaining "+game.players.length); 
                         //For handling case when all the player get disconnected 
-                        if(game.players.length <= 1){
-                            console.log('game done');
-                            game.players[0].socket.leave(token);
-                            delete game;
-                            socket.broadcast.to(token).emit('abort',{
-                                'display_data': 'Everyone got thrown off the ship'
-                            });
+                        //The outer if loop is to prevent any null pointer errors
+                        if(game.players.length > 0){
+                            if(game.players.length == 1){
+                                console.log('game done');
+                                game.players[0].socket.leave(token);
+                                delete game;
+                                socket.broadcast.to(token).emit('abort',{
+                                    'display_data': 'Everyone got thrown off the ship'
+                                });
+                            }
+                            
+                            //handle if the disconnected guy has the turn
+                            if(game.turn == i){
+                                game.turn = (game.turn+1) % game.players.length;
+                                socket.broadcast.to(token).emit('new-turn',{
+                                    'name' : game.players[game.turn].name,
+                                    'player_info': getPlayerInfo(game),
+                                    'display_data':' Your turn '
+                                });
+                            }
                         }
-                        console.log("remaining "+game.players.length); 
-                        //For handling case when all the player get disconnected 
-                        
-                        //handle if the disconnected guy has the turn
-                        if(game.turn == i){
-                            game.turn = (game.turn+1) % game.players.length;
-                            socket.broadcast.to(token).emit('new-turn',{
-                                'name' : game.players[game.turn].name
-                            });
-                        }
-                        console.log("sent data");
                     }
                 }
             }
@@ -216,6 +254,17 @@ module.exports = function (server) {
 
     });
     
+    function getPlayerInfo(game){
+       player_info = {};
+       for(var each in game.players){
+           //Player scores,names and colour
+           player_info[game.players[each].name]={
+               'score':game.players[each].score,
+               'colour':game.players[each].colour
+           };
+       }
+       return player_info;
+    }
     /*
      * Utility function to find the player name of a given colour.
      */

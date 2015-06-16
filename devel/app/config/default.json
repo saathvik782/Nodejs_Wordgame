@@ -1,6 +1,8 @@
 {
     "wordGame": {
         "db": "mongodb://localhost/test",
-        "gameWaitTime":5
+        "gameWaitTime":50,
+        "minimumWords":10,
+        "puzzleSize":15
     }
 }

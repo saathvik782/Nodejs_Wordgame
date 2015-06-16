@@ -13,10 +13,10 @@ var router = express.Router();
 router.post('/', function(req, res) {
     var user = req.body.user; 
     var token;
-    if(!req.body.token)
-        token=util.randomString(20);
+    if("key" in req.body)
+        token=req.body.key;
     else
-        token=req.body.token;
+        token=util.randomString(20);
     res.redirect('/game/' + token + '/' + user);
 });
 
