@@ -161,7 +161,7 @@ $(document).on('ready',function(){
     });
 
     $('#gamePassButton').on('click',function(){
-        socket.on('pass',{
+        socket.emit('pass',{
             'token':token,
             'name':user,
             'colour':colour

@@ -8,13 +8,11 @@ var a = {
     
     words : [],
     
-    //minimumNoOfWords : config.get('wordGame.minimumWords'),
-    minimumNoOfWords : 10,
+    minimumNoOfWords : config.get('wordGame.minimumWords'),
+    //minimumNoOfWords : 10,
     
-    puzzleSize : 15,
-
-    //filePath: config.get('wordGame.wordFilePath'),
-    filePath : '/usr/share/dict/words',
+    //puzzleSize : 15,
+    puzzleSize : config.get('wordGame.puzzleSize'),
     
     generatePuzzle : function(w){
         //var numerOfWords = Math.floor((Math.random() * 5) + this.minimumNoOfWords); 
