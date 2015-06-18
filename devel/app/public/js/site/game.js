@@ -5,6 +5,7 @@ $(document).on('ready',function(){
     var wordSoFar=[];
     var idSoFar=[];
     var movementInfo={};
+    var turn=false;
     movementInfo.firstGrid={};
     movementInfo.firstGrid.i=0,movementInfo.firstGrid.j=0;
     movementInfo.allowable={};
@@ -49,14 +50,17 @@ $(document).on('ready',function(){
         $('#colouredUserName').css('background-color', colour);
         $('#mainScreen').html('');
         gridSize=data.puzzle.length;
+        $('#mainScreen').append('<table class="table table-bordered"><tbody></tbody></table>');
         for(var i=0;i<data.puzzle.length;i++){
+            $('#mainScreen > table > tbody').append('<tr id="'+i+'-tr"><tr/>')
             for(var j=0;j<data.puzzle[i].length;j++){
-                $('#mainScreen').append('<button class="btn btn-success disabled letter" data-i="'+i+'" data-j="'+j+'" data-letter="'+data.puzzle[i][j] +'" id="'+i+'-'+j+'">'+data.puzzle[i][j]+'</button> ');
+                //$('#mainScreen').append('<button class="btn success disabled letter" data-i="'+i+'" data-j="'+j+'" data-letter="'+data.puzzle[i][j] +'" id="'+i+'-'+j+'">'+data.puzzle[i][j]+'</button> ');
+                $('#mainScreen > table > tbody > #'+i+'-tr').append('<td class="success letter" data-i="'+i+'" data-j="'+j+'" data-letter="'+data.puzzle[i][j] +'" id="'+i+'-'+j+'">'+data.puzzle[i][j]+'</td>');
             }
-            $('#mainScreen').append('<br/><br/>')
         }
         
         $('.letter').on('click',function(e){
+            if(!turn) return false;
             //If he clicks on a element that is already selected everything after the element will be remove
             var index=idSoFar.indexOf(e.target.id);
             if(index > -1){
@@ -174,29 +178,32 @@ $(document).on('ready',function(){
         //highlight the correct element
         for(var each in data.id_list){
             if(data.action == 'mark'){
-                $('#'+data.id_list[each]).removeClass("btn-success");
-                $('#'+data.id_list[each]).addClass("btn-warning");
+                $('#'+data.id_list[each]).removeClass("success");
+                $('#'+data.id_list[each]).addClass("warning");
             }
             else if(data.action == 'unmark'){
-                $('#'+data.id_list[each]).removeClass("btn-warning");
-                $('#'+data.id_list[each]).addClass("btn-success");
+                $('#'+data.id_list[each]).removeClass("warning");
+                $('#'+data.id_list[each]).addClass("success");
             }
         }
     });
     
     socket.on('new-turn',function(data){
         displayOnSideScreenL(data);
-        $('.letter').removeClass('btn-warning');
-        $('.letter').addClass('btn-success');
+        $('.letter').removeClass('warning');
+        $('.letter').addClass('success');
         wordSoFar=[];
         idSoFar=[];
         //if not your turn make all words unclickable
         if(data.name == user){
             releaseTheLettersAndPass();
             displayOnSideScreenR(data);
+            turn=true;
         }
-        else
+        else{
             cageTheLettersAndPass();
+            turn=false;
+        }
     });
      
     socket.on('new-enter',function(data){
@@ -242,8 +249,8 @@ $(document).on('ready',function(){
     };
     
     function clearAllLetters(){
-        $('.letter').removeClass('btn-warning');
-        $('.letter').addClass('btn-success');
+        $('.letter').removeClass('warning');
+        $('.letter').addClass('success');
     };
 
     function releaseTheLettersAndPass(){
