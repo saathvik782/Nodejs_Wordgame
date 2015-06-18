@@ -245,7 +245,7 @@ var a = {
         while(length > 0){
              var index=Math.floor((Math.random() * (w.length)) + 0);
              var word=w[index].replace(/\W/g,"").toLowerCase();
-             if( word.length<15 & generatedWords.indexOf(word) == -1){
+             if( word.length<this.puzzleSize & generatedWords.indexOf(word) == -1){
                  generatedWords.push(word);
                  length--;
              }
