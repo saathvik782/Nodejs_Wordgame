@@ -46,7 +46,7 @@ module.exports = function (server) {
 
                 socket.join(room);
                 socket.emit('wait',{ 
-                    'display_data': 'waiting for other players..',
+                    'display_data':'Use token: <b>'+data.token+'</b> to connect <br/> waiting for other players..',
                 }); // tell the game creator to wait until a opponent joins the game
                 return;
             }
@@ -83,7 +83,7 @@ module.exports = function (server) {
             io.sockets.to(room).emit('waiting-for-more-players',{ 
                 'token':room, 
                 'time_remaining': config.get('wordGame.gameWaitTime'),
-                'display_data': 'Game starts in '+config.get('wordGame.gameWaitTime')+' seconds',
+                'display_data': 'Use token: <b>'+data.token+'</b> to connect  <br/>  Game starts in '+config.get('wordGame.gameWaitTime')+' seconds',
                 'root':game.root
             });
             io.sockets.to(room).emit('player-joined',{
@@ -112,7 +112,7 @@ module.exports = function (server) {
             }
             else{
                 console.log("incrementing time..");
-                data.display_data='Game starts in '+data.time_remaining+' seconds';
+                data.display_data='Use token: <b>'+data.token+'</b> to connect  <br/>  Game starts in '+data.time_remaining+' seconds';
                 io.sockets.to(data.token).emit('waiting-for-more-players', data);
 
             }

@@ -229,7 +229,7 @@ $(document).on('ready',function(){
     function displayOnMainScreen(data){
         console.log(data);
         if('display_data' in data)
-            $('#mainScreen').text(data.display_data);
+            $('#mainScreen').html(data.display_data);
     };
 
     function displayOnSideScreenR(data){
