@@ -1,9 +1,12 @@
+var words = require('./test');
 var config = require('config');
 var puzzle = require('./puzzle');
 module.exports = function (server) {
 
+    
     var io = require('socket.io').listen(server);
-    var games = {};
+    console.log('server started');
+    var games={};
     
     /*
      * Socket IO event handlers
@@ -96,7 +99,7 @@ module.exports = function (server) {
                 var game=games[data.token]
                 
                 data.player_info=getPlayerInfo(game);
-                data.puzzle=puzzle.generatePuzzle();
+                data.puzzle=puzzle.generatePuzzle(words);
                 game.wordsRemaining=puzzle.getWords();
 
                 game.status='ready';

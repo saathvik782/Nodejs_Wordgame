@@ -17,6 +17,12 @@ module.exports = {
         }
 
         return string;
+    },
+
+    randomLetter : function(){
+        var alpha = "abcdefghijklmnopqrstuvwxyz";
+        var rand = alpha[Math.floor(Math.random() * (alpha.length-1))];
+        return rand;
     }
 };
 

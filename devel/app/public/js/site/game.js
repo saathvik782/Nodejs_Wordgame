@@ -51,9 +51,9 @@ $(document).on('ready',function(){
         gridSize=data.puzzle.length;
         for(var i=0;i<data.puzzle.length;i++){
             for(var j=0;j<data.puzzle[i].length;j++){
-                $('#mainScreen').append('<button class="btn btn-success disabled letter" data-i="'+i+'" data-j="'+j+'" data-letter="'+data.puzzle[i][j] +'" id="'+i+'-'+j+'">'+data.puzzle[i][j]+'</button>');
+                $('#mainScreen').append('<button class="btn btn-success disabled letter" data-i="'+i+'" data-j="'+j+'" data-letter="'+data.puzzle[i][j] +'" id="'+i+'-'+j+'">'+data.puzzle[i][j]+'</button> ');
             }
-            $('#mainScreen').append('<br/>')
+            $('#mainScreen').append('<br/><br/>')
         }
         
         $('.letter').on('click',function(e){
