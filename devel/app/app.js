@@ -29,10 +29,8 @@ app.use(express.static(path.join(__dirname, 'site')));
 // configure routes
 var routes = require('./routes/index');
 var play = require('./routes/play');
-var connect = require('./routes/connect');
 
 app.use('/', routes);
-app.use('/connect', connect);
 app.use('/play', play);
 
 // configure error handlers

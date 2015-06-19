@@ -190,8 +190,7 @@ $(document).on('ready',function(){
     
     socket.on('new-turn',function(data){
         displayOnSideScreenL(data);
-        $('.letter').removeClass('warning');
-        $('.letter').addClass('success');
+        clearAllLetters();
         wordSoFar=[];
         idSoFar=[];
         //if not your turn make all words unclickable

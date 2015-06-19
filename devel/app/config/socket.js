@@ -123,16 +123,19 @@ module.exports = function (server) {
          */
         socket.on('new-click', function(data) {
             var game=games[data.token];
-            player_info={};
-            for(var each in game.players){
-                //Player scores,names and colour
-                player_info[game.players[each].name]={
-                    'score':game.players[each].score,
-                    'colour':game.players[each].colour
-                };
+            if(data.name == game.players[game.turn].name){
+                player_info={};
+                for(var each in game.players){
+                    //Player scores,names and colour
+                    player_info[game.players[each].name]={
+                        'score':game.players[each].score,
+                        'colour':game.players[each].colour
+                    };
+                }
+                data.player_info=player_info;
+                io.sockets.to(data.token).emit('new-click', data);
+
             }
-            data.player_info=player_info;
-            io.sockets.to(data.token).emit('new-click', data);
         });
 
         socket.on('new-enter', function(data){
