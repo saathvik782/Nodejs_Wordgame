@@ -4,6 +4,6 @@
         "gameWaitTime":50,
         "minimumWords":10,
         "puzzleSize":15,
-        "wordFilePath":"/usr/share/dict/words"
+        "wordFilePath":"./words"
     }
 }
