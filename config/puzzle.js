@@ -143,8 +143,8 @@ var a = {
             i++;
         }
         
-        //console.log(this.puzzle_);
-        console.log(this.words);
+        console.log(this.puzzle_);
+        //console.log(this.words);
         this.fillRemaining(); 
         this.generatePuzzleFromPuzzle_();
         return this.puzzle;
