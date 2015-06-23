@@ -65,7 +65,7 @@ $(document).on('ready',function(){
             var index=idSoFar.indexOf(e.target.id);
             if(index > -1){
                 var unmark_list=idSoFar.splice(index,idSoFar.length-index);
-                console.log(unmark_list);
+                //console.log(unmark_list);
                 wordSoFar.splice(index,wordSoFar.length-index);
                 socket.emit('new-click',{
                     'token':token,
@@ -133,7 +133,7 @@ $(document).on('ready',function(){
                 movementInfo.prevGrid.i=i;
                 movementInfo.prevGrid.j=j;
             }
-            console.log(movementInfo);
+            //console.log(movementInfo);
             wordSoFar.push($(this).attr('data-letter'));
             idSoFar.push(e.target.id);
             
@@ -226,19 +226,19 @@ $(document).on('ready',function(){
     });
     
     function displayOnMainScreen(data){
-        console.log(data);
+        //console.log(data);
         if('display_data' in data)
             $('#mainScreen').html(data.display_data);
     };
 
     function displayOnSideScreenR(data){
-        console.log(data);
+        //console.log(data);
         if('display_data' in data)
             $('#sideScreenR').append('<font color="'+(("colour"in data)? data.colour : colour)+'">'+data.display_data+'</font><br/>');
     };
     
     function displayOnSideScreenL(data){
-        console.log(data);
+        //console.log(data);
         var html_text="";
         if('player_info' in data)
             for (var each in data.player_info)
@@ -273,7 +273,7 @@ $(document).on('ready',function(){
                     continue;
                 $("#"+i+'-'+j).removeClass('enabled');
                 $("#"+i+'-'+j).addClass('disabled');
-                console.log("disable"+i+' '+j);
+                //console.log("disable"+i+' '+j);
             }
         }
     };
@@ -285,7 +285,7 @@ $(document).on('ready',function(){
                     continue;                
                 $("#"+j+'-'+i).removeClass('enabled');
                 $("#"+j+'-'+i).addClass('disabled');
-                console.log("disable"+j+' '+j);
+                //console.log("disable"+j+' '+j);
             }
         }
     };

@@ -33,9 +33,9 @@ var a = {
         wordsFinished = [" "]; 
 
         i=0;
-        console.log('Starting puzzle generation for '+this.words+'..');
+        //console.log('Starting puzzle generation for '+this.words+'..');
         while( i < this.words.length ){
-            console.log('->Present word is - '+this.words[i]);
+            //console.log('->Present word is - '+this.words[i]);
             pos_found=false;
             while(!pos_found){
                 var j=i;
@@ -47,10 +47,10 @@ var a = {
                 while( i!=0 & j == i)
                     j=Math.floor((Math.random() * wordsFinished.length) + 0);
                 
-                console.log('-->prev word choosen is '+this.words[j]);
+                //console.log('-->prev word choosen is '+this.words[j]);
                 //get a col_no and row_no to work with
                 if(i!=0 & (wordsFinished[j].indexOf(this.words[i][0]) > -1)){
-                    console.log('-->trying to attach to word '+this.words[j]);
+                    //console.log('-->trying to attach to word '+this.words[j]);
                     //attach to a prev word
                     var wp=wordsPosition[wordsFinished[j]];
                     var l=wp.start.i,
@@ -69,7 +69,7 @@ var a = {
                     row_no = Math.floor((Math.random() * (this.puzzleSize-1)) + 0); 
                     col_no = Math.floor((Math.random() * (this.puzzleSize-1)) + 0); 
                 }
-                console.log('-->trying to put at position  '+row_no+' '+col_no);
+                //console.log('-->trying to put at position  '+row_no+' '+col_no);
                 
                 var endi,endj;
                 //Do the main assignment work here
@@ -119,11 +119,11 @@ var a = {
                             }
                             break;
                 };
-                //console.log('-->pos is '+pos+' direction is '+directionj+' '+directioni);
+                ////console.log('-->pos is '+pos+' direction is '+directionj+' '+directioni);
                 
                 //copt the word into position if possible
                 if(!this.isPosTaken(directionj,directioni,pos,row_no,col_no,endi,endj)){
-                    console.log('-->position availabe');
+                    //console.log('-->position availabe');
                     this.copyInPosition(this.words[i],directionj,directioni,pos,row_no,col_no,endi,endj);
                     wordsPosition[this.words[i]]={
                         'start':{
@@ -139,7 +139,7 @@ var a = {
                     pos_found=true;
                 }
             }
-            console.log('->word done..');
+            //console.log('->word done..');
             i++;
         }
         
@@ -151,8 +151,8 @@ var a = {
     },
     
     isPosTaken : function(directionj,directioni,pos,i,j,endi,endj){
-        //console.log(directionj+ ' ' +directioni);
-        //console.log(i+' '+j+' '+endi+' '+endj);
+        ////console.log(directionj+ ' ' +directioni);
+        ////console.log(i+' '+j+' '+endi+' '+endj);
         
         if(directioni == 1){
             if(directionj == 1){
@@ -239,7 +239,7 @@ var a = {
     },
 
     generateWords: function(w,length){
-        console.log('Generating words...');
+        //console.log('Generating words...');
         var data_;
         var generatedWords=[];
         while(length > 0){
@@ -250,7 +250,7 @@ var a = {
                  length--;
              }
          }
-        console.log('words generated');
+        //console.log('words generated');
         return generatedWords;
     }
 };
